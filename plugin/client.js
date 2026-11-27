@@ -8,12 +8,14 @@ window.__ModuleLoader__.load({
     const namespace = 'aio-workbench'
     const en = {
       open: 'Open AIO workbench',
-      missing: 'Install AIO Tauri, then try again',
+      missing: 'AIO executable is missing. Check the plugin installation',
+      corrupt: 'AIO verification failed. Reinstall the plugin',
       failed: 'Could not open AIO. Try again',
     }
     const zh = {
       open: '打开 AIO 工作台',
-      missing: '请安装 AIO Tauri 后重试',
+      missing: '找不到 AIO 程序，请检查插件安装',
+      corrupt: 'AIO 文件校验失败，请重新安装插件',
       failed: '无法打开 AIO，请重试',
     }
 
@@ -28,7 +30,7 @@ window.__ModuleLoader__.load({
           const response = await fetch('aio-workbench/open', {
             method: 'POST', headers: { 'x-aio-launch': '1' },
           })
-          if (response.status !== 204) setError(response.status === 404 ? 'missing' : 'failed')
+          if (response.status !== 204) setError(response.status === 404 ? 'missing' : response.status === 422 ? 'corrupt' : 'failed')
         } catch (_error) {
           setError('failed')
         } finally {

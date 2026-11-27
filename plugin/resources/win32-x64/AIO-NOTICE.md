@@ -1,5 +1,7 @@
 # NOTICE
 
+AIO 源码仓库 [https://github.com/AncoderAI/AIO.git](https://github.com/AncoderAI/AIO.git)
+
 AncoderWork 是 [GooeyPi](https://github.com/am-will/gooey-pi) 的衍生作品。
 
 - 上游：`am-will/gooey-pi`，MIT License，Copyright (c) 2026 GooeyPi contributors

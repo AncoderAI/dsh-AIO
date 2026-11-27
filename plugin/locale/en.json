@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "AIO Workbench",
+    "description": "Open a session’s workspace folder in the AIO Tauri desktop workbench."
+  }
+}

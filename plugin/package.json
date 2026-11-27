@@ -1,0 +1,28 @@
+{
+  "name": "dsh-aio-workbench",
+  "version": "0.1.0",
+  "description": "Open a DeepSeek Harness Desktop session’s workspace in the AIO Tauri workbench",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "dsh": "0.2.1-rc.2" },
+  "exports": {
+    ".": "./host.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": ["host.js", "client.js", "shared.js", "cordis.patch.yml", "locale/*.json"],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ]
+    }
+  }
+}

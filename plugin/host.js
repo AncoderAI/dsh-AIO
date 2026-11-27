@@ -1,13 +1,12 @@
-/** Windows Desktop bridge for AIO Tauri's Explorer folder entry point. */
+/** Windows Desktop bridge. AIO owns the workbench and its window lifecycle. */
 import { spawn } from 'node:child_process'
 import { stat } from 'node:fs/promises'
 import { dirname, extname, join } from 'node:path'
-import { route, workspaceHeader } from './shared.js'
+import { route, launchHeader } from './shared.js'
 
 export const name = 'aio-workbench'
 export const inject = ['webServer', 'connection']
 
-const localPath = /^[a-z]:[\\/]/i
 const environmentKeys = new Set([
   'allusersprofile', 'appdata', 'commonprogramfiles', 'commonprogramfiles(x86)', 'commonprogramw6432',
   'comspec', 'homedrive', 'homepath', 'localappdata', 'os', 'path', 'pathext', 'programdata',
@@ -15,11 +14,11 @@ const environmentKeys = new Set([
   'temp', 'tmp', 'username', 'userprofile', 'windir', 'aio_claude_binary', 'aio_codex_binary',
 ])
 
-function launch(executable, workspace) {
+function launch(executable) {
   const env = Object.fromEntries(Object.entries(process.env)
     .filter(([key]) => environmentKeys.has(key.toLowerCase())))
   return new Promise((resolve, reject) => {
-    const child = spawn(executable, ['--open-folder', workspace], {
+    const child = spawn(executable, [], {
       cwd: dirname(executable), detached: true, stdio: 'ignore', env,
     })
     child.once('error', reject)
@@ -52,20 +51,11 @@ export function apply(ctx) {
         res.setHeader('allow', 'POST')
         return respond(405)
       }
-      const encoded = req.headers[workspaceHeader]
-      if (typeof encoded !== 'string' || encoded.length > 8192) return respond(400)
-      let workspace
+      if (req.headers[launchHeader] !== '1') return respond(400)
+      if (!executable || !/^[a-z]:[\\/]/i.test(executable) || extname(executable).toLowerCase() !== '.exe'
+        || !(await stat(executable).catch(() => undefined))?.isFile()) return respond(404)
       try {
-        workspace = decodeURIComponent(encoded)
-      } catch (_error) {
-        return respond(400)
-      }
-      if (!localPath.test(workspace) || workspace.includes('\0')) return respond(400)
-      if (!(await stat(workspace, { throwIfNoEntry: false }).catch(() => undefined))?.isDirectory()) return respond(422)
-      if (!executable || !localPath.test(executable) || extname(executable).toLowerCase() !== '.exe'
-        || !(await stat(executable, { throwIfNoEntry: false }).catch(() => undefined))?.isFile()) return respond(404)
-      try {
-        await launch(executable, workspace)
+        await launch(executable)
       } catch (error) {
         ctx.logger('aio-workbench').warn('Windows could not start AIO: %s', String(error))
         return respond(500)

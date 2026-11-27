@@ -1,3 +1,3 @@
-/** Desktop bridge route and its URI-encoded workspace header. */
+/** Desktop bridge route and its explicit request header. */
 export const route = '/aio-workbench/open'
-export const workspaceHeader = 'x-aio-workspace'
+export const launchHeader = 'x-aio-launch'

@@ -1,6 +1,6 @@
 {
   "name": "dsh-aio-workbench",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Open the standalone AIO Tauri workbench from DeepSeek Harness Desktop",
   "type": "module",
   "license": "MIT",

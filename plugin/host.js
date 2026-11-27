@@ -10,8 +10,8 @@ import { route, launchHeader } from './shared.js'
 export const name = 'aio-workbench'
 export const inject = ['webServer', 'connection']
 
-const bundledExecutable = fileURLToPath(new URL('./resources/win32-x64/AIO_2.0.2_x64-system-language-portable.exe', import.meta.url))
-const bundledSha256 = 'eaef58a6bf75347899315869008a26aa4e314befa567bd9c6f917c3ace83986c'
+const bundledExecutable = fileURLToPath(new URL('./resources/win32-x64/AIO_2.0.7_x64-portable.exe', import.meta.url))
+const bundledSha256 = 'a518056132f069ee9cb4128e226cc28dd0b7d7319b902eec1e900e42ae70f3f5'
 
 const environmentKeys = new Set([
   'allusersprofile', 'appdata', 'commonprogramfiles', 'commonprogramfiles(x86)', 'commonprogramw6432',
